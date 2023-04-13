@@ -2,7 +2,7 @@ from quizzApp.utils.dependecies import *
 from string import punctuation
 punctuation = punctuation + '\n'
 
-def generate_summary(text):
+def generate_paraphrase(text):
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
