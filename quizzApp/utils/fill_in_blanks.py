@@ -1,11 +1,13 @@
 from quizzApp.utils.dependecies import *
+from quizzApp.utils.common_functions import *
+from string import punctuation
+punctuation = punctuation + '\n'
 
 def fill_in_blanks(text):
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
     tokens = [token.text for token in doc]
-    punctuation = punctuation + '\n'
     word_frequencies = {}
     for word in doc:
         if word.text.lower() not in stopwords:
@@ -62,7 +64,7 @@ def fill_in_blanks(text):
     sentences_fill_in = []
     unsuccessful_attempts = 0
     max_questions = len(set(mappedSents.keys()).intersection(set(mappedDists.keys())))
-
+    return_text =""
     while i < max_questions and unsuccessful_attempts < 10*max_questions:
         # Randomly choose a word from mappedDists
         each = random.choice(list(mappedDists.keys()))
@@ -77,8 +79,8 @@ def fill_in_blanks(text):
                 # Replace the chosen word with a blank in the sentence
                 p = re.compile(each,re.IGNORECASE)
                 op = p.sub("________",sent)
-                print("Question %s-> %s"%(iterator, op))
-                
+                ##print("Question %s-> %s"%(iterator, op))
+                return_text = return_text + "Question %s-> %s"%(iterator, op) + "\n"
                 # Create a list of answer choices including the correct answer and three distractors
                 options = [each.capitalize()]+random.sample(mappedDists[each], 3)
                 options = options[:4]
@@ -90,8 +92,9 @@ def fill_in_blanks(text):
                         answer = ch.capitalize()
                 
                 # Display the answer choices and the correct answer
-                print()
-                print("\tAnswer: %s\n"%(answer))
+                 ##print()
+                 ##print("\tAnswer: %s\n"%(answer))
+                return_text = return_text + "\tAnswer: %s\n"%(answer) + "\n"
                 iterator += 1
                 sentences_fill_in.append(sent)
                 i += 1
@@ -102,3 +105,4 @@ def fill_in_blanks(text):
         else:
             # If the chosen word is not in mappedSents or does not have a sentence associated with it, increment the unsuccessful_attempts counter
             unsuccessful_attempts += 1
+    return return_text 

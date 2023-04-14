@@ -1,4 +1,5 @@
 from quizzApp.utils.dependecies import *
+from quizzApp.utils.common_functions import *
 from string import punctuation
 punctuation = punctuation + '\n'
 

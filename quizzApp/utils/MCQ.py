@@ -1,11 +1,14 @@
 from quizzApp.utils.dependecies import *
+from quizzApp.utils.common_functions import *
+from string import punctuation
+punctuation = punctuation + '\n'
 
 def MCQ_output(text):
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
     tokens = [token.text for token in doc]
-    punctuation = punctuation + '\n'
+
     word_frequencies = {}
     for word in doc:
         if word.text.lower() not in stopwords:
@@ -62,6 +65,7 @@ def MCQ_output(text):
     sentences_fill_in = []
     unsuccessful_attempts = 0 #Counter for unsuccessful attempts
     max_questions = len(set(mappedSents.keys()).intersection(set(mappedDists.keys())))
+    return_text = ""
 
     while i < max_questions and unsuccessful_attempts < 10*max_questions: #Exit loop after 10*num_questions unsuccessful attempts
         each = random.choice(list(mappedDists.keys()))
@@ -70,7 +74,8 @@ def MCQ_output(text):
             if sent not in sentences_fill_in:
                 p = re.compile(each,re.IGNORECASE) #Converts into regular expression for pattern matching
                 op = p.sub(" *****",sent) #Replaces the keyword with underscores(blanks)
-                print("Question %s-> %s"%(iterator, op)) #Prints the question along with a question number
+                ##print("Question %s-> %s"%(iterator, op)) #Prints the question along with a question number
+                return_text = return_text +  "Question %s-> %s"%(iterator, op)+ "\n"
                 options = [each.capitalize()]+random.sample(mappedDists[each], 3) #Capitalizes the options
                 options = options[:4] #Selects only 4 options
                 random.shuffle(options) #Shuffle the options so that order is not always same
@@ -78,9 +83,11 @@ def MCQ_output(text):
                     if ch.lower() == each.lower():
                         answer = ch
                         answer_index = i
-                    print("\t%s: %s"%(chr(65+i), ch.capitalize())) #Print options
-                print()
-                print("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) #Print the correct answer
+                    ##print("\t%s: %s"%(chr(65+i), ch.capitalize())) #Print options
+                    return_text = return_text +  "\t%s: %s"%(chr(65+i), ch.capitalize())+ "\n"
+                ##print()
+                ##print("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) #Print the correct answer
+                return_text = return_text +  "\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())+ "\n"
                 iterator += 1 #Increase the counter
                 sentences_fill_in.append(sent)
                 i += 1
@@ -89,3 +96,4 @@ def MCQ_output(text):
                 unsuccessful_attempts += 1 #Increment unsuccessful_attempts counter
         else:
             unsuccessful_attempts += 1 #Increment unsuccessful_attempts counter if no sentences available for the word
+    return return_text

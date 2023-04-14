@@ -22,3 +22,7 @@ from PyPDF2 import PdfReader
 from urllib.parse import urlparse
 import torch
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
+
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('punkt')
