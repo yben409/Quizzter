@@ -5,7 +5,8 @@ from quizzApp.utils.summarize import generate_summary
 from quizzApp.utils.MCQ import MCQ_output
 from quizzApp.utils.fill_in_blanks import fill_in_blanks
 from quizzApp.utils.paraphrase import generate_paraphrase
-
+from quizzApp.utils.pdf_to_text import read_pdf
+from quizzApp.utils.link_scraper import link_scraper
 
 
 
@@ -28,10 +29,20 @@ def modify(request , func):
     else:
         return HttpResponse("Nul value").status_code(400)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def pdf_to_text(request):
-    return HttpResponse('text pdf here')
+    pdf = request.FILES.get('pdfFile')
+    if pdf :
+        text = read_pdf(pdf)
+        return HttpResponse(text)
+    else:
+       return  HttpResponse("Nul value").status_code(400)
 
 @api_view(['POST'])
 def link_to_text(request):
-    return HttpResponse('link pdf here')
+    link = request.data['link']
+    if link :
+        text = link_scraper(link)
+        return HttpResponse(text)
+    else:
+       return  HttpResponse("Nul value").status_code(400)

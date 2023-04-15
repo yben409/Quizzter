@@ -9,7 +9,7 @@ if torch.cuda.is_available() :
 else : 
     torch_device = 'cpu'
     #model = PegasusTokenizer.from_pretrained("quizzApp/utils/torch_model/pytorch_model.bin")
-    
+
 model = PegasusForConditionalGeneration.from_pretrained(model_name).to(torch_device)
 
 

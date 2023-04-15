@@ -4,6 +4,7 @@ from string import punctuation
 punctuation = punctuation + '\n'
 
 def generate_paraphrase(text):
+    print(text)
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
@@ -61,4 +62,6 @@ def generate_paraphrase(text):
     paraphrase2 = [' '.join(x) for x in paraphrase]
     paraphrase3 = ['. '.join(x for x in paraphrase2) ]
     paraphrased_text = str(paraphrase3).strip('[]').strip("'")
+    print("-----------------------------------------------------------")
+    print(paraphrased_text)
     return paraphrased_text
