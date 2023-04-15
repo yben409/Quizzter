@@ -1,8 +1,10 @@
 from quizzApp.utils.dependecies import *
+from quizzApp.utils.common_functions import *
 from string import punctuation
 punctuation = punctuation + '\n'
 
 def generate_summary(text):
+    text = translate_tamil_to_english(text)
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
@@ -46,9 +48,11 @@ def generate_summary(text):
     summary_ = nlargest(select_length, sentence_scores, key = sentence_scores.get)
     final_summary = [word.text for word in summary_]
     j = 0
-    for i in range(len(final_summary)):
-        if final_summary[i] == sentence_tokens[0].text:
-            del final_summary[i]
+    for i in final_summary:
+        j = j + 1
+        if i == sentence_tokens[0].text:
+            del final_summary[j-1]
     summary = ' '.join(final_summary) 
     summary = sentence_tokens[0].text + ' ' + summary
+    summary = translate_english_to_tamil(summary)
     return summary

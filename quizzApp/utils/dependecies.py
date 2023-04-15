@@ -23,6 +23,9 @@ from urllib.parse import urlparse
 import torch
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
+from mtranslate import translate
+
+
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')

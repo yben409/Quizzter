@@ -16,11 +16,11 @@ def modify(request , func):
     text = request.data['text']
     if(text!=""):
         if func == "summarize":
-            sum_text = generate_summary(text)
+            sum_text = generate_summary(text.replace('\n',''))
         elif func == "rephrase":
-            sum_text = generate_paraphrase(text)
+            sum_text = generate_paraphrase(text.replace('\n',''))
         elif func ==  "quiz":
-            sum_text = MCQ_output(text) + "\n" + fill_in_blanks(text)
+            sum_text =  "Fill in the blanks :\n" + fill_in_blanks(text)+ "\nMCQ :\n"+ MCQ_output(text) 
              ##sum_text = sum_text + fill_in_blanks(text)
 
         else:

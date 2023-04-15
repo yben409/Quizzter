@@ -147,3 +147,21 @@ def is_valid_url(url):
     except:
         # If an exception occurs during parsing, return 0
         return 0
+    
+def translate_tamil_to_english(text):
+    detected_language = translate(text[:500], 'en', 'ta')
+
+    if detected_language != 'ta':
+        return text
+
+    translation = translate(text, 'en', 'ta')
+    return translation
+
+def translate_english_to_tamil(text):
+    detected_language = translate(text[:500], 'ta', 'en')
+
+    if detected_language != 'en':
+        return text
+
+    translation = translate(text, 'ta', 'en')
+    return translation
