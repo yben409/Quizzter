@@ -20,7 +20,7 @@ def modify(request , func):
         elif func == "rephrase":
             sum_text = generate_paraphrase(text.replace('\n',''))
         elif func ==  "quiz":
-            sum_text =  "Fill in the blanks :\n" + fill_in_blanks(text)+ "\nMCQ :\n"+ MCQ_output(text) 
+            sum_text =  "Fill in the blanks :\n" + fill_in_blanks(text)+ "\nMCQ :\n"+ MCQ_output(text)
              ##sum_text = sum_text + fill_in_blanks(text)
 
         else:

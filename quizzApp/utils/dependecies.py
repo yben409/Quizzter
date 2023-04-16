@@ -23,7 +23,7 @@ from urllib.parse import urlparse
 import torch
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
-from translate import Translator
+from googletrans import Translator
 from langdetect import detect
 
 

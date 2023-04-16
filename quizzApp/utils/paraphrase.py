@@ -4,6 +4,14 @@ from string import punctuation
 punctuation = punctuation + '\n'
 
 def generate_paraphrase(text):
+    text_min_length = 100
+    if len(text)< text_min_length:
+        return "Text too small to generate a rephrased version"
+    
+    text_is_tamil = False 
+    if detect( text[:500] if len(text) > 500  else text)=='ta':
+        text = translate_tamil_to_english(text)
+        text_is_tamil = True 
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
@@ -62,4 +70,6 @@ def generate_paraphrase(text):
     paraphrase2 = [' '.join(x) for x in paraphrase]
     paraphrase3 = ['. '.join(x for x in paraphrase2) ]
     paraphrased_text = str(paraphrase3).strip('[]').strip("'")
+    if text_is_tamil :
+        paraphrased_text = translate_english_to_tamil(paraphrased_text)
     return paraphrased_text

@@ -4,10 +4,17 @@ from string import punctuation
 punctuation = punctuation + '\n'
 
 def fill_in_blanks(text):
+    text_min_length = 100
+    if len(text)< text_min_length: 
+        return "Text too small to generate a fill in the blanks quiz"
+    
+    text_is_tamil = False 
+    if detect( text[:500] if len(text) > 500  else text)=='ta':
+        text = translate_tamil_to_english(text)
+        text_is_tamil = True 
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
-    tokens = [token.text for token in doc]
     word_frequencies = {}
     for word in doc:
         if word.text.lower() not in stopwords:
@@ -33,7 +40,7 @@ def fill_in_blanks(text):
         new_key = str(key)
         str_sentence_scores[new_key] = sentence_scores[key]
     alpha_words = {word: freq for word, freq in word_frequencies.items() if word.isalpha()}
-    top_words = random.sample(heapq.nlargest(20, alpha_words, key=alpha_words.get),15)
+    top_words = random.sample(heapq.nlargest(text_min_length, alpha_words, key=alpha_words.get),10)
     str_sentences = []
     for i in range(len(sentence_tokens)):
         sente = str(sentence_tokens[i])
@@ -80,7 +87,7 @@ def fill_in_blanks(text):
                 p = re.compile(each,re.IGNORECASE)
                 op = p.sub("________",sent)
                 ##print("Question %s-> %s"%(iterator, op))
-                return_text = return_text + "Question %s-> %s"%(iterator, op) + "\n"
+                return_text = return_text + (("Question %s-> %s"%(iterator, op)) if text_is_tamil == False else translate_english_to_tamil("Question %s-> %s"%(iterator, op)) ) + "\n"
                 # Create a list of answer choices including the correct answer and three distractors
                 options = [each.capitalize()]+random.sample(mappedDists[each], 3)
                 options = options[:4]
@@ -94,7 +101,7 @@ def fill_in_blanks(text):
                 # Display the answer choices and the correct answer
                  ##print()
                  ##print("\tAnswer: %s\n"%(answer))
-                return_text = return_text + "\tAnswer: %s\n"%(answer) + "\n"
+                return_text = return_text + (("\tAnswer: %s\n"%(answer)) if text_is_tamil == False else translate_english_to_tamil("\tAnswer: %s\n"%(answer))) + "\n"
                 iterator += 1
                 sentences_fill_in.append(sent)
                 i += 1
@@ -105,4 +112,5 @@ def fill_in_blanks(text):
         else:
             # If the chosen word is not in mappedSents or does not have a sentence associated with it, increment the unsuccessful_attempts counter
             unsuccessful_attempts += 1
+            
     return return_text 

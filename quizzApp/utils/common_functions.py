@@ -1,20 +1,37 @@
 from quizzApp.utils.dependecies import *
 
-# create a Translator object
 
 def translate_tamil_to_english(text):
-    # create a Translator object
-    translator = Translator(to_lang="en", from_lang="ta")
-    # translate the text
-    translation = translator.translate(text)
-    return translation
+    # Split text into sentences using the NLTK punkt tokenizer
+    sentences = nltk.sent_tokenize(text)
+
+    # Translate each sentence to Tamil using the googletrans module
+    en_sentences = []
+    translator = Translator()
+    for sentence in sentences:
+        en_sentence = translator.translate(sentence, src='ta', dest='en').text
+        en_sentences.append(en_sentence)
+
+    # Join the English sentences back into a single string
+    en_text = " ".join(en_sentences)
+
+    return en_text
 
 def translate_english_to_tamil(text):
-    # create a Translator object
-    ta_translator = Translator(to_lang="ta", from_lang="en")
-    # translate the text
-    translation = ta_translator.translate(text)
-    return translation
+    # Split text into sentences using the NLTK punkt tokenizer
+    sentences = nltk.sent_tokenize(text)
+
+    # Translate each sentence to Tamil using the googletrans module
+    tamil_sentences = []
+    translator = Translator()
+    for sentence in sentences:
+        tamil_sentence = translator.translate(sentence, src='en', dest='ta').text
+        tamil_sentences.append(tamil_sentence)
+
+    # Join the Tamil sentences back into a single string
+    tamil_text = " ".join(tamil_sentences)
+
+    return tamil_text
 
     
 

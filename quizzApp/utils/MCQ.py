@@ -4,10 +4,17 @@ from string import punctuation
 punctuation = punctuation + '\n'
 
 def MCQ_output(text):
+    text_min_length = 100
+    if len(text)< text_min_length:
+        return "Text too small to generate a MCQ quiz"
+    
+    text_is_tamil = False 
+    if detect( text[:500] if len(text) > 500  else text)=='ta':
+        text = translate_tamil_to_english(text)
+        text_is_tamil = True 
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
-    tokens = [token.text for token in doc]
 
     word_frequencies = {}
     for word in doc:
@@ -34,7 +41,7 @@ def MCQ_output(text):
         new_key = str(key)
         str_sentence_scores[new_key] = sentence_scores[key]
     alpha_words = {word: freq for word, freq in word_frequencies.items() if word.isalpha()}
-    top_words = random.sample(heapq.nlargest(20, alpha_words, key=alpha_words.get),15)
+    top_words = random.sample(heapq.nlargest(10, alpha_words, key=alpha_words.get),10)
     str_sentences = []
     for i in range(len(sentence_tokens)):
         sente = str(sentence_tokens[i])
@@ -75,7 +82,7 @@ def MCQ_output(text):
                 p = re.compile(each,re.IGNORECASE) #Converts into regular expression for pattern matching
                 op = p.sub(" *****",sent) #Replaces the keyword with underscores(blanks)
                 ##print("Question %s-> %s"%(iterator, op)) #Prints the question along with a question number
-                return_text = return_text +  "Question %s-> %s"%(iterator, op)+ "\n"
+                return_text = return_text +  (("Question %s-> %s"%(iterator, op)) if text_is_tamil == False else translate_english_to_tamil("Question %s-> %s"%(iterator, op))) + "\n"
                 options = [each.capitalize()]+random.sample(mappedDists[each], 3) #Capitalizes the options
                 options = options[:4] #Selects only 4 options
                 random.shuffle(options) #Shuffle the options so that order is not always same
@@ -84,10 +91,10 @@ def MCQ_output(text):
                         answer = ch
                         answer_index = i
                     ##print("\t%s: %s"%(chr(65+i), ch.capitalize())) #Print options
-                    return_text = return_text +  "\t%s: %s"%(chr(65+i), ch.capitalize())+ "\n"
+                    return_text = return_text +  (("\t%s: %s"%(chr(65+i), ch.capitalize())) if text_is_tamil == False else translate_english_to_tamil("\t%s: %s"%(chr(65+i), ch.capitalize())) )+ "\n"
                 ##print()
                 ##print("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) #Print the correct answer
-                return_text = return_text +  "\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())+ "\n"
+                return_text = return_text +  (("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) if text_is_tamil == False else translate_english_to_tamil("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize()))) + "\n"
                 iterator += 1 #Increase the counter
                 sentences_fill_in.append(sent)
                 i += 1
@@ -96,4 +103,5 @@ def MCQ_output(text):
                 unsuccessful_attempts += 1 #Increment unsuccessful_attempts counter
         else:
             unsuccessful_attempts += 1 #Increment unsuccessful_attempts counter if no sentences available for the word
+    
     return return_text

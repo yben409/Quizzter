@@ -6,6 +6,9 @@ punctuation = punctuation + '\n'
 
 
 def generate_summary(text):
+    text_min_length = 100
+    if len(text)< text_min_length:
+        return "Text too small to generate a summary"
     text_is_tamil = False 
     if detect( text[:500] if len(text) > 500  else text)=='ta':
         text = translate_tamil_to_english(text)
@@ -57,7 +60,7 @@ def generate_summary(text):
         j = j + 1
         if i == sentence_tokens[0].text:
             del final_summary[j-1]
-    summary = ' '.join(final_summary) 
+    summary = ' '.join(final_summary)
     summary = sentence_tokens[0].text + ' ' + summary
     if text_is_tamil :
         summary = translate_english_to_tamil(summary)
