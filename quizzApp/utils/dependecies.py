@@ -23,7 +23,11 @@ from urllib.parse import urlparse
 import torch
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
-from mtranslate import translate
+from translate import Translator
+from langdetect import detect
+
+
+
 
 
 nltk.download('wordnet')

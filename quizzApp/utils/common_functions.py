@@ -1,14 +1,26 @@
 from quizzApp.utils.dependecies import *
 
+# create a Translator object
+
+def translate_tamil_to_english(text):
+    # create a Translator object
+    translator = Translator(to_lang="en", from_lang="ta")
+    # translate the text
+    translation = translator.translate(text)
+    return translation
+
+def translate_english_to_tamil(text):
+    # create a Translator object
+    ta_translator = Translator(to_lang="ta", from_lang="en")
+    # translate the text
+    translation = ta_translator.translate(text)
+    return translation
+
+    
+
 model_name = 'tuner007/pegasus_paraphrase'
 tokenizer = PegasusTokenizer.from_pretrained(model_name)
-if torch.cuda.is_available() :
-    torch_device = 'cuda' 
-    #model = torch.from_pretrained("quizzApp/utils/torch_model/pytorch_model.bin")
-    
-else : 
-    torch_device = 'cpu'
-    #model = PegasusTokenizer.from_pretrained("quizzApp/utils/torch_model/pytorch_model.bin")
+torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 model = PegasusForConditionalGeneration.from_pretrained(model_name).to(torch_device)
 
@@ -147,21 +159,3 @@ def is_valid_url(url):
     except:
         # If an exception occurs during parsing, return 0
         return 0
-    
-def translate_tamil_to_english(text):
-    detected_language = translate(text[:500], 'en', 'ta')
-
-    if detected_language != 'ta':
-        return text
-
-    translation = translate(text, 'en', 'ta')
-    return translation
-
-def translate_english_to_tamil(text):
-    detected_language = translate(text[:500], 'ta', 'en')
-
-    if detected_language != 'en':
-        return text
-
-    translation = translate(text, 'ta', 'en')
-    return translation

@@ -3,12 +3,17 @@ from quizzApp.utils.common_functions import *
 from string import punctuation
 punctuation = punctuation + '\n'
 
+
+
 def generate_summary(text):
-    text = translate_tamil_to_english(text)
+    text_is_tamil = False 
+    if detect( text[:500] if len(text) > 500  else text)=='ta':
+        text = translate_tamil_to_english(text)
+        text_is_tamil = True 
+    
     nlp = spacy.load("en_core_web_sm")
     stopwords = list(STOP_WORDS)
     doc = nlp(text)
-    tokens = [token.text for token in doc]
     word_frequencies = {}
     for word in doc:
         if word.text.lower() not in stopwords:
@@ -54,5 +59,6 @@ def generate_summary(text):
             del final_summary[j-1]
     summary = ' '.join(final_summary) 
     summary = sentence_tokens[0].text + ' ' + summary
-    summary = translate_english_to_tamil(summary)
+    if text_is_tamil :
+        summary = translate_english_to_tamil(summary)
     return summary
