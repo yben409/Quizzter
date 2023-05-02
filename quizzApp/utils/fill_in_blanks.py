@@ -71,7 +71,8 @@ def fill_in_blanks(text):
     sentences_fill_in = []
     unsuccessful_attempts = 0
     max_questions = len(set(mappedSents.keys()).intersection(set(mappedDists.keys())))
-    return_text =""
+    return_text = ""
+    answers = ""
     while i < max_questions and unsuccessful_attempts < 10*max_questions:
         # Randomly choose a word from mappedDists
         each = random.choice(list(mappedDists.keys()))
@@ -101,7 +102,7 @@ def fill_in_blanks(text):
                 # Display the answer choices and the correct answer
                  ##print()
                  ##print("\tAnswer: %s\n"%(answer))
-                return_text = return_text + (("\tAnswer: %s\n"%(answer)) if text_is_tamil == False else translate_english_to_tamil("\tAnswer: %s\n"%(answer))) + "\n"
+                answers = answers + (("\tAnswer question %s"%(iterator) + " : %s\n"%(answer)) if text_is_tamil == False else translate_english_to_tamil("\tAnswer: %s\n"%(answer))) + "\n"
                 iterator += 1
                 sentences_fill_in.append(sent)
                 i += 1
@@ -113,4 +114,4 @@ def fill_in_blanks(text):
             # If the chosen word is not in mappedSents or does not have a sentence associated with it, increment the unsuccessful_attempts counter
             unsuccessful_attempts += 1
             
-    return return_text 
+    return return_text  + "\n\nAnswers :\n" + answers

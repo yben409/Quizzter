@@ -73,6 +73,7 @@ def MCQ_output(text):
     unsuccessful_attempts = 0 #Counter for unsuccessful attempts
     max_questions = len(set(mappedSents.keys()).intersection(set(mappedDists.keys())))
     return_text = ""
+    answers = ""
 
     while i < max_questions and unsuccessful_attempts < 10*max_questions: #Exit loop after 10*num_questions unsuccessful attempts
         each = random.choice(list(mappedDists.keys()))
@@ -94,7 +95,7 @@ def MCQ_output(text):
                     return_text = return_text +  (("\t%s: %s"%(chr(65+i), ch.capitalize())) if text_is_tamil == False else translate_english_to_tamil("\t%s: %s"%(chr(65+i), ch.capitalize())) )+ "\n"
                 ##print()
                 ##print("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) #Print the correct answer
-                return_text = return_text +  (("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) if text_is_tamil == False else translate_english_to_tamil("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize()))) + "\n"
+                answers = answers +  (("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize())) if text_is_tamil == False else translate_english_to_tamil("\tAnswer: %s\n"%(chr(65+answer_index) + ". " + answer.capitalize()))) + "\n"
                 iterator += 1 #Increase the counter
                 sentences_fill_in.append(sent)
                 i += 1
@@ -104,4 +105,4 @@ def MCQ_output(text):
         else:
             unsuccessful_attempts += 1 #Increment unsuccessful_attempts counter if no sentences available for the word
     
-    return return_text
+    return return_text  + "\n\nAnswers :\n" + answers
